@@ -11,8 +11,8 @@ const COOKIE_NAME = 'pr_session';
 
 // Override via env vars in production; these defaults match what was asked for.
 const ACCOUNT = {
-  email: (process.env.LOGIN_EMAIL).toLowerCase(),
-  password: process.env.LOGIN_PASSWORD,
+  email: (process.env.LOGIN_EMAIL || '').toLowerCase(),
+  password: process.env.LOGIN_PASSWORD || '',
 };
 
 // AUTH_SECRET should be set in production (Vercel env vars). Falls back to a
@@ -60,8 +60,8 @@ function issueSessionCookie(res) {
   const token = sign({ email: ACCOUNT.email, exp: Date.now() + SESSION_MS });
   res.cookie(COOKIE_NAME, token, {
     httpOnly: true,
-    sameSite: 'None',
-    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'none',   // required — frontend and backend are on different Vercel subdomains
+    secure: true,        // required by browsers when sameSite is 'none'
     maxAge: SESSION_MS,
     path: '/',
   });

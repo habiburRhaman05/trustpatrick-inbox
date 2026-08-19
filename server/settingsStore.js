@@ -12,6 +12,11 @@
 // fallbacks below cover the names already in use on existing deployments
 // (including the LOACTION_ID typo) so nothing breaks on rollout.
 
+// GHL credentials come exclusively from environment variables.
+// On Vercel: set them in the project dashboard → Settings → Environment Variables.
+// On Railway: set them in the service variables.
+// For local dev: copy .env.example to .env and fill in the values.
+
 const LOCATION_ID = (
   process.env.GHL_LOCATION_ID ||
   process.env.LOCATION_ID ||

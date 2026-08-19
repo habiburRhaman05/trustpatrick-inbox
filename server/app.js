@@ -2,7 +2,10 @@
 // used both by the local dev server (server/index.js) and by the Vercel
 // serverless entry (api/index.js).
 
-require('dotenv').config({ path: require('path').join(__dirname, '.env') });
+// Load .env for local dev; silently ignored on Vercel (env vars come from the dashboard).
+try {
+  require('dotenv').config({ path: require('path').join(__dirname, '.env') });
+} catch (_) { /* dotenv not needed in production */ }
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -31,9 +34,13 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
   .map((o) => o.trim())
   .filter(Boolean);
 
+const corsOrigins = allowedOrigins.length > 0
+  ? allowedOrigins
+  : ['https://trustpatrick-inbox.vercel.app', 'http://localhost:5173'];
+
 app.use(
   cors({
-    origin: ["https://trustpatrick-inbox.vercel.app","http://localhost:5173"],
+    origin: corsOrigins,
     credentials: true,
   })
 );
@@ -55,6 +62,17 @@ function requireSettings(req, res, next) {
 
 // ---- Auth -----------------------------------------------------------------
 
+// Health check — public, no auth. Used by Railway (and load balancers in
+// general) to know the process is up; must never require a session cookie.
+app.get('/api/health', (req, res) => res.json({ ok: true }));
+
+// Session-protected middleware for /api routes. Auth and health routes are
+// exempted so they remain public.
+app.use('/api', (req, res, next) => {
+  if (req.path.startsWith('/auth/') || req.path.startsWith('/health')) return next();
+  return auth.requireAuth(req, res, next);
+});
+
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body || {};
   if (!auth.checkCredentials(email, password)) {
@@ -73,16 +91,6 @@ app.get('/api/auth/me', (req, res) => {
   const session = auth.getSession(req);
   if (!session) return res.status(401).json({ error: 'Not signed in.' });
   res.json({ email: session.email, expiresAt: session.exp });
-});
-
-// Health check — public, no auth. Used by Railway (and load balancers in
-// general) to know the process is up; must never require a session cookie.
-app.get('/api/health', (req, res) => res.json({ ok: true }));
-
-// Everything below requires a valid session.
-app.use('/api', (req, res, next) => {
-  if (req.path.startsWith('/auth/')) return next();
-  return auth.requireAuth(req, res, next);
 });
 
 // ---- Connection status (read-only) --------------------------------------
