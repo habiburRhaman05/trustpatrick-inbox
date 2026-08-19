@@ -59,11 +59,6 @@ async function ghlFetch(token, path, { method = 'GET', body, query } = {}) {
   return json;
 }
 
-/** Quick call to validate a Location ID + token pair. */
-async function testConnection(locationId, token) {
-  return ghlFetch(token, '/contacts/', { query: { locationId, limit: 1 } });
-}
-
 // ---- Contacts -------------------------------------------------------------
 
 /** Contacts in a location that carry a given tag (default: positive-replied). */
@@ -220,7 +215,6 @@ async function sendSmsReply(token, { locationId, conversationId, contactId, mess
 
 module.exports = {
   GhlApiError,
-  testConnection,
   getContactsByTag,
   getContact,
   searchConversations,

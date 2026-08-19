@@ -2,7 +2,7 @@
 // used both by the local dev server (server/index.js) and by the Vercel
 // serverless entry (api/index.js).
 
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -33,7 +33,7 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
 
 app.use(
   cors({
-    origin: ["https://trustpatrick-inbox.vercel.app","http://localhost:5174"],
+    origin: ["https://trustpatrick-inbox.vercel.app","http://localhost:5173"],
     credentials: true,
   })
 );
@@ -85,27 +85,13 @@ app.use('/api', (req, res, next) => {
   return auth.requireAuth(req, res, next);
 });
 
-// ---- Settings ---------------------------------------------------------
+// ---- Connection status (read-only) --------------------------------------
+//
+// GHL credentials are hardcoded via env vars (see settingsStore.js), so this
+// endpoint is purely informational — the save/clear endpoints are gone and
+// clients cannot supply their own Location ID or token.
 
 app.get('/api/settings', (req, res) => {
-  res.json(settings.publicView());
-});
-
-app.post('/api/settings', asyncHandler(async (req, res) => {
-  const { locationId, token } = req.body || {};
-  if (!locationId || !token) {
-    return res.status(400).json({ error: 'Location ID and Private Integration Token are both required.' });
-  }
-
-  // Validate against the real API before saving.
-  await ghl.testConnection(locationId, token);
-
-  settings.save({ locationId, token });
-  res.json(settings.publicView());
-}));
-
-app.delete('/api/settings', (req, res) => {
-  settings.clear();
   res.json(settings.publicView());
 });
 

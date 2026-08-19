@@ -42,13 +42,11 @@ export function LoginPage({ onLogin }: Props) {
   return (
     <div className="login-screen">
       <div className="login-card">
-        <div className="login-brand">
-          <span className="app-badge">PR</span>
-          <div>
-            <h1>Positive Replies</h1>
-            <p>Sign in to view and reply to tagged conversations.</p>
-          </div>
-        </div>
+       
+    <img src="https://trustpatrick.com/trustpatrick-logo.webp" className='login-logo' width={170} alt="" />
+       
+          
+       
 
         <form onSubmit={handleSubmit} noValidate>
           {formError && (

@@ -52,14 +52,6 @@ export interface Conversation {
   [key: string]: unknown;
 }
 
-export interface SettingsView {
-  configured: boolean;
-  locationId: string;
-  tokenPreview: string;
-  hasToken: boolean;
-  managedByEnv: boolean;
-}
-
 export interface AuthUser {
   email: string;
   expiresAt: number;

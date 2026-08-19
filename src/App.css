@@ -22,8 +22,8 @@
 .app-header-title {
   display: flex;
   align-items: center;
-  gap: 10px;
   min-width: 0;
+  flex-direction: column;
 }
 
 .app-header-title h1 {
@@ -59,6 +59,10 @@
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+}
+
+.login-logo{
+  margin: auto;
 }
 
 .status-dot {
@@ -246,28 +250,6 @@
   .thread-back {
     display: none;
   }
-}
-
-/* ---- Connect CTA ---- */
-.connect-cta {
-  margin: auto;
-  text-align: center;
-  max-width: 380px;
-  padding: 32px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-.connect-cta h2 {
-  font-size: 1.15rem;
-}
-.connect-cta p {
-  color: var(--color-text-muted);
-  font-size: 0.9rem;
-}
-.connect-cta .btn {
-  margin-top: 8px;
 }
 
 /* ---- Search bar ---- */
@@ -576,7 +558,7 @@
   white-space: nowrap;
 }
 
-/* ---- Form fields (shared with settings modal / login) ---- */
+/* ---- Form fields (shared with the login screen) ---- */
 .field {
   display: flex;
   flex-direction: column;
@@ -651,81 +633,6 @@
 }
 .password-toggle:hover {
   background: var(--color-surface-alt);
-}
-
-/* ---- Modal ---- */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(32, 33, 36, 0.5);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  z-index: 900;
-  padding: 0;
-}
-.modal {
-  background: var(--color-surface);
-  width: 100%;
-  max-width: 480px;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  box-shadow: var(--shadow-md);
-  max-height: 92dvh;
-  overflow-y: auto;
-  animation: modal-up 0.2s ease-out;
-}
-
-@keyframes modal-up {
-  from {
-    transform: translateY(16px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@media (min-width: 640px) {
-  .modal-overlay {
-    align-items: center;
-  }
-  .modal {
-    border-radius: var(--radius-lg);
-  }
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 20px;
-  border-bottom: 1px solid var(--color-border);
-}
-.modal-header h2 {
-  font-size: 1.02rem;
-  font-weight: 600;
-}
-
-.modal-body {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.modal-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 4px;
-  flex-wrap: wrap;
-}
-.modal-actions-right {
-  display: flex;
-  gap: 8px;
-  margin-left: auto;
 }
 
 /* ---- Login screen ---- */
@@ -938,5 +845,177 @@
   .info-row {
     grid-template-columns: 1fr;
     gap: 2px;
+  }
+}
+
+/* ---- Sync screen (post-login GHL auto-sync) ---- */
+.sync-screen {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 32px 20px;
+  background: radial-gradient(1100px 520px at 50% -10%, var(--color-primary-soft), var(--color-bg) 62%);
+}
+
+.sync-card {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 30px 26px;
+  text-align: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 34px rgba(32, 33, 36, 0.1);
+  animation: sync-rise 0.45s ease both;
+}
+
+.sync-badge {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 0 0 var(--color-primary-ring);
+  animation: sync-pulse 1.9s ease-out infinite;
+}
+
+.sync-card h2 {
+  font-size: 1.15rem;
+}
+.sync-subtitle,
+.sync-error {
+  font-size: 0.86rem;
+  color: var(--color-text-muted);
+}
+.sync-error {
+  color: var(--color-danger);
+}
+
+.sync-progress {
+  width: 100%;
+  height: 6px;
+  margin-top: 4px;
+  border-radius: 999px;
+  background: var(--color-surface-alt);
+  overflow: hidden;
+}
+.sync-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--color-primary), #7aa7f0);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sync-steps {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+  list-style: none;
+  text-align: left;
+}
+.sync-step {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.86rem;
+  color: var(--color-text-faint);
+  opacity: 0.55;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+.sync-step-done {
+  opacity: 1;
+  color: var(--color-text-muted);
+}
+.sync-step-active {
+  opacity: 1;
+  color: var(--color-text);
+  font-weight: 500;
+}
+.sync-step-active .sync-step-icon {
+  animation: sync-bob 1.1s ease-in-out infinite;
+}
+.sync-step-icon {
+  display: inline-block;
+  width: 1.2em;
+  flex-shrink: 0;
+}
+
+/* Ghost of the real layout so the app looks like it is assembling itself. */
+.sync-preview {
+  width: 100%;
+  max-width: 760px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  opacity: 0.6;
+}
+.sync-preview-sidebar,
+.sync-preview-thread {
+  padding: 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+.sync-preview-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.skeleton-bubble-out {
+  align-self: flex-end;
+}
+
+@media (max-width: 700px) {
+  .sync-preview {
+    display: none;
+  }
+}
+@media (min-width: 860px) {
+  .sync-preview {
+    grid-template-columns: 300px 1fr;
+  }
+}
+
+@keyframes sync-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@keyframes sync-pulse {
+  70% {
+    box-shadow: 0 0 0 14px rgba(26, 115, 232, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(26, 115, 232, 0);
+  }
+}
+@keyframes sync-bob {
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sync-card,
+  .sync-badge,
+  .sync-step-active .sync-step-icon {
+    animation: none;
+  }
+  .sync-progress-fill {
+    transition: none;
   }
 }

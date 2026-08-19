@@ -44,14 +44,6 @@ export const api = {
   logout: () => request<{ ok: boolean }>('/auth/logout', { method: 'POST' }),
   me: () => request<import('../types').AuthUser>('/auth/me'),
 
-  getSettings: () => request<import('../types').SettingsView>('/settings'),
-  saveSettings: (locationId: string, token: string) =>
-    request<import('../types').SettingsView>('/settings', {
-      method: 'POST',
-      body: JSON.stringify({ locationId, token }),
-    }),
-  clearSettings: () => request<import('../types').SettingsView>('/settings', { method: 'DELETE' }),
-
   getContacts: () => request<{ contacts: import('../types').Contact[] }>('/contacts'),
 
   getContact: (contactId: string) =>
