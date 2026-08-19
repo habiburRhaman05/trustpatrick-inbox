@@ -17,7 +17,7 @@ export const AUTH_EVENT = 'pr:unauthorized';
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   let res: Response;
   try {
-    res = await fetch(`https://trustpatrick-inbox-production.up.railway.app/api${path}`, {
+    res = await fetch(`https://trustpatrick-inbox-backend.vercel.app/api${path}`, {
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       ...init,
